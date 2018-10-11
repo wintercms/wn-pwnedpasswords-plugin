@@ -1,0 +1,18 @@
+{
+    "name": "luketowers/oc-pwnedpasswords-plugin",
+    "type": "october-plugin",
+    "description": "Adds the notpwned validation rule to check passwords against the HIBP Pwned Passwords service",
+    "homepage": "https://github.com/LukeTowers/oc-pwnedpasswords-plugin",
+    "keywords": ["october", "octobercms", "laravel", "validation", "haveibeenpwned",  "pwned passwords", "passwords"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Luke Towers",
+            "email": "octobercms@luketowers.ca"
+        }
+    ],
+    "require": {
+        "ext-curl": "*",
+        "composer/installers": "~1.0"
+    }
+}

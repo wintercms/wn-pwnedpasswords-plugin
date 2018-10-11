@@ -21,7 +21,7 @@ For example, `password` has been pwned 3,303,003 times, however `P@ssword!` has 
 If we wanted to block `password` but not `P@ssword!`, we can specify the minimum number as 150 like this:
 
 ```php
-    'password' => 'required|string|min:6|pwned:150|confirmed',
+    'password' => 'required|string|min:6|notpwned:150|confirmed',
 ```
 
 ## Using with the Backend User model
