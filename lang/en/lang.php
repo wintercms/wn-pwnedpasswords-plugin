@@ -1,7 +1,7 @@
 <?php return [
     'plugin' => [
         'name'        => 'PwnedPasswords',
-        'description' => 'Adds the notpwned validation rule to check passwords against the HIBP Pwned Passwords service',
+        'description' => 'Validation rule for checking values against the HIBP PwnedPasswords service',
     ],
 
     'validation' => [
