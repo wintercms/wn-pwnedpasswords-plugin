@@ -12,6 +12,11 @@ use LukeTowers\PwnedPasswords\ValidationRules\NotPwned;
 class Plugin extends PluginBase
 {
     /**
+     * Ensure the plugin is available on all routes
+     */
+    public $elevated = true;
+    
+    /**
      * Returns information about this plugin.
      *
      * @return array
