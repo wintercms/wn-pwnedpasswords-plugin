@@ -87,7 +87,7 @@ class NotPwned implements Rule
     private function query($prefix)
     {
         // Cache results for a week, to avoid constant API calls for identical prefixes
-        return Cache::remember('pwned:'.$prefix, 10080, function () use ($prefix) {
+        return Cache::remember('pwned:'.$prefix, now()->addWeeks(1), function () use ($prefix) {
             $curl = curl_init('https://api.pwnedpasswords.com/range/'.$prefix);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
             $results = curl_exec($curl);

@@ -2,7 +2,13 @@
 
 use Lang;
 use Event;
-use Illuminate\Support\Facades\Validator;
+use Flash;
+use Config;
+use Validator;
+use BackendAuth;
+use ValidationException;
+use Backend\Models\User;
+use Backend\Controllers\Auth;
 use System\Classes\PluginBase;
 use LukeTowers\PwnedPasswords\ValidationRules\NotPwned;
 
@@ -15,7 +21,7 @@ class Plugin extends PluginBase
      * Ensure the plugin is available on all routes
      */
     public $elevated = true;
-    
+
     /**
      * Returns information about this plugin.
      *
@@ -48,5 +54,52 @@ class Plugin extends PluginBase
         Validator::replacer('notpwned', function ($message, $attribute, $rule, $parameters) {
             return str_replace(':min', array_shift($parameters) ?? 1, $message);
         });
+
+        // Enforce rule on backend users if desired
+        if (Config::get('luketowers.pwnedpasswords::enforceOnBackendUsers', false)) {
+            User::extend(function($model) {
+                $model->rules = array_merge($model->rules, ['password' => $model->rules['password'] . '|notpwned']);
+            });
+
+            // Force users to reset their passwords if they login with a pwned password
+            Auth::extend(function ($controller) {
+                $controller->bindEvent('page.beforeDisplay', function ($action, $params) use ($controller) {
+                    if (post('postback') &&
+                        ($action === 'signin' || $action === 'reset')
+                    ) {
+                        $validation = Validator::make(post(), ['password' => 'notpwned']);
+                        if ($validation->fails()) {
+                            // Force users to reset their password
+                            if ($action === 'signin') {
+                                Event::listen('backend.user.login', function ($user) use ($controller) {
+                                    // Make sure the user is not authenticated
+                                    BackendAuth::logout();
+
+                                    // Send out the password reset email
+                                    $response = $controller->restore_onSubmit();
+
+                                    // Notify the user
+                                    Flash::error("Your password has been detected in known password breaches and must be changed. An email with instructions to reset your password has been sent to your email address on file.");
+
+                                    // Return the response
+                                    abort($response);
+                                });
+                            }
+
+                            // Ensure that they don't reset it to another terrible password
+                            if ($action === 'reset') {
+                                try {
+                                    throw new ValidationException($validation);
+                                } catch (ValidationException $ex) {
+                                    // Notify the user & reload the page
+                                    Flash::error($ex->getMessage());
+                                    return redirect()->refresh();
+                                }
+                            }
+                        }
+                    }
+                });
+            });
+        }
     }
 }

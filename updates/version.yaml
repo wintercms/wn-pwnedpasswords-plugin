@@ -1,2 +1,3 @@
 1.0.1: 'Initial version'
 1.0.2: 'Made the notpwned rule available on all routes'
+1.1.0: 'Added config option to enforce the notpwned policy on all backend users by default and support Laravel 6'

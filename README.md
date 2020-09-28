@@ -24,65 +24,29 @@ If we wanted to block `password` but not `P@ssword!`, we can specify the minimum
 'password' => 'required|string|min:6|notpwned:150|confirmed',
 ```
 
-## Using with the Backend User model
+## Enforce this rule on Backend authentication
 
-To use with the Backend user model, add the following to the boot() method of your plugin:
-
-```php
-\Backend\Models\User::extend(function($model) {
-    $model->rules = array_merge($model->rules, ['password' => $model->rules['password'] . '|notpwned']);
-});
-```
-
-## Force existing users to reset their passwords
-
-To force existing users to reset their passwords on their next login, add the following to the boot() method of your plugin (ensure that `$elevated = true` is also set):
+To enforce this rule on the Backend authentication system, create a file at `config/luketowers/pwnedpasswords/config.php` and put the following in it:
 
 ```php
-// Force users to reset their passwords if they login with a pwned password
-\Backend\Controllers\Auth::extend(function ($controller) {
-    $controller->bindEvent('page.beforeDisplay', function ($action, $params) use ($controller) {
-        switch ($action) {
-            case 'signin':
-            case 'reset':
-                if (post('postback')) {
-                    $validation = \Validator::make(post(), ['password' => 'notpwned']);
-                    if ($validation->fails()) {
-                        // Force users to reset their password
-                        if ($action === 'signin') {
-                            // Only generate the reset code after the user has been successfully authenticated
-                            // otherwise anyone attempting to login with a weak password would automatically get
-                            // to use the password reset functionality to reset the user's password.
-                            \Event::listen('backend.user.login', function ($user) {
-                                // Flash doesn't work since we're returning a crude redirect here // Flash::error("You must reset your password.");
-                                header('Location: ' . \Backend::url('backend/auth/reset/'.$user->id.'/'.$user->getResetPasswordCode()));
-                                die();
-                            });
-                        }
-                        
-                        // Ensure that they don't reset it to another terrible password
-                        if ($action === 'reset') {
-                            try {
-                                throw new \ValidationException($validation);
-                            } catch (\ValidationException $ex) {
-                                // Make this as clean of a request as possible so we don't cause an infinite loop
-                                request()->replace([]);
-                                request()->request->replace([]);
-                                $_POST = [];
+<?php return [
 
-                                // Flash the error message
-                                \Flash::error($ex->getMessage());
+    /*
+    |--------------------------------------------------------------------------
+    | Enforce "notpwned" rule on backend users
+    |--------------------------------------------------------------------------
+    |
+    | When this is enabled, the 'notpwned' validation rule is enforced on all
+    | backend users by default. This means that they will not be able to update
+    | their password to any password detected in a password breach, and if a
+    | backend user tries to login with a "pwned" password, they will be rejected
+    | and a password reset email will be sent to their email address for them to
+    | change their password.
+    */
 
-                                // Return the reset action ready for the user to try again
-                                return $controller->run('reset', $params);
-                            }
-                        }
-                    }
-                }
-                break;
-        }
-    });
-});
+    'enforceOnBackendUsers' => true,
+
+];
 ```
 
 ## Overriding the validation message
