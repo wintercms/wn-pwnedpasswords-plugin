@@ -90,13 +90,24 @@ class NotPwned implements Rule
         return Cache::remember('pwned:'.$prefix, now()->addWeeks(1), function () use ($prefix) {
             $curl = curl_init('https://api.pwnedpasswords.com/range/'.$prefix);
             curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+            // Ensure queries are padded. See https://haveibeenpwned.com/API/v3#PwnedPasswordsPadding
+            curl_setopt($curl, CURLOPT_HTTPHEADER, ['Add-Padding: true']);
             $results = curl_exec($curl);
             curl_close($curl);
 
             return (new Collection(explode("\n", $results)))
                 ->mapWithKeys(function ($value) {
-                    list($suffix, $count) = explode(':', trim($value));
-                    return [$suffix => $count];
+                    $result = [];
+                    $pair = explode(':', trim($value));
+                    list($suffix, $count) = $pair;
+
+                    if (count($pair) === 2 &&
+                        is_numeric($count) &&
+                        $count > 0
+                    ) {
+                        $result = [$suffix => $count];
+                    }
+                    return $result;
                 });
         });
     }
