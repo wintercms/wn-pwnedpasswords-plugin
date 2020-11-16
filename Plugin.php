@@ -1,5 +1,6 @@
 <?php namespace LukeTowers\PwnedPasswords;
 
+use App;
 use Lang;
 use Event;
 use Flash;
@@ -56,7 +57,7 @@ class Plugin extends PluginBase
         });
 
         // Enforce rule on backend users if desired
-        if (Config::get('luketowers.pwnedpasswords::enforceOnBackendUsers', false)) {
+        if (Config::get('luketowers.pwnedpasswords::enforceOnBackendUsers', false) && !App::runningInConsole()) {
             User::extend(function($model) {
                 $model->rules = array_merge($model->rules, ['password' => $model->rules['password'] . '|notpwned']);
             });
