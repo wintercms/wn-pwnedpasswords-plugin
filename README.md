@@ -4,13 +4,13 @@ Adds the `notpwned:min` validation rule to check values against the [HaveIBeenPw
 
 # Installation
 
-To install from the [Marketplace](https://octobercms.com/plugin/luketowers-pwnedpasswords), click on the "Add to Project" button and then select the project you wish to add it to before updating the project to pull in the plugin.
+To install from the [Marketplace](https://wintercms.com/plugin/winter-pwnedpasswords), click on the "Add to Project" button and then select the project you wish to add it to before updating the project to pull in the plugin.
 
-To install from the backend, go to **Settings -> Updates & Plugins -> Install Plugins** and then search for `LukeTowers.PwnedPasswords`.
+To install from the backend, go to **Settings -> Updates & Plugins -> Install Plugins** and then search for `Winter.PwnedPasswords`.
 
-To install from [the repository](https://github.com/luketowers/oc-pwnedpasswords-plugin), clone it into **plugins/luketowers/pwnedpasswords** and then run `composer update` from your project root in order to pull in the dependencies.
+To install from [the repository](https://github.com/wintercms/wn-pwnedpasswords-plugin), clone it into **plugins/winter/pwnedpasswords** and then run `composer update` from your project root in order to pull in the dependencies.
 
-To install it with Composer, run `composer require luketowers/oc-pwnedpasswords-plugin` from your project root.
+To install it with Composer, run `composer require winter/wn-pwnedpasswords-plugin` from your project root.
 
 # Documentation
 
@@ -26,7 +26,7 @@ If we wanted to block `password` but not `P@ssword!`, we can specify the minimum
 
 ## Enforce this rule on Backend authentication
 
-To enforce this rule on the Backend authentication system, create a file at `config/luketowers/pwnedpasswords/config.php` and put the following in it:
+To enforce this rule on the Backend authentication system, create a file at `config/winter/pwnedpasswords/config.php` and put the following in it:
 
 ```php
 <?php return [
@@ -51,4 +51,4 @@ To enforce this rule on the Backend authentication system, create a file at `con
 
 ## Overriding the validation message
 
-To override the validation message, duplicate the plugin's `lang/en/lang.php` file to `project/lang/$locale/luketowers/pwnedpasswords/lang.php`.
+To override the validation message, duplicate the plugin's `lang/en/lang.php` file to `project/lang/$locale/winter/pwnedpasswords/lang.php`.

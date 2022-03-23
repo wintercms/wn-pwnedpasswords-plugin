@@ -1,4 +1,4 @@
-<?php namespace LukeTowers\PwnedPasswords;
+<?php namespace Winter\PwnedPasswords;
 
 use App;
 use Lang;
@@ -11,7 +11,7 @@ use ValidationException;
 use Backend\Models\User;
 use Backend\Controllers\Auth;
 use System\Classes\PluginBase;
-use LukeTowers\PwnedPasswords\ValidationRules\NotPwned;
+use Winter\PwnedPasswords\ValidationRules\NotPwned;
 
 /**
  * PwnedPasswords Plugin Information File
@@ -31,11 +31,11 @@ class Plugin extends PluginBase
     public function pluginDetails()
     {
         return [
-            'name'        => 'luketowers.pwnedpasswords::lang.plugin.name',
-            'description' => 'luketowers.pwnedpasswords::lang.plugin.description',
-            'author'      => 'Luke Towers',
+            'name'        => 'winter.pwnedpasswords::lang.plugin.name',
+            'description' => 'winter.pwnedpasswords::lang.plugin.description',
+            'author'      => 'Winter CMS',
             'icon'        => 'icon-check',
-            'homepage'    => 'https://github.com/LukeTowers/oc-pwnedpasswords-plugin',
+            'homepage'    => 'https://github.com/wintercms/wn-pwnedpasswords-plugin',
         ];
     }
 
@@ -46,7 +46,7 @@ class Plugin extends PluginBase
     {
         Event::listen('translator.beforeResolve', function ($key, $replaces, $locale) {
             if ($key === 'validation.notpwned') {
-                return Lang::get('luketowers.pwnedpasswords::lang.validation.notpwned');
+                return Lang::get('winter.pwnedpasswords::lang.validation.notpwned');
             }
         });
 
@@ -57,7 +57,7 @@ class Plugin extends PluginBase
         });
 
         // Enforce rule on backend users if desired
-        if (Config::get('luketowers.pwnedpasswords::enforceOnBackendUsers', false) && !App::runningInConsole()) {
+        if (Config::get('winter.pwnedpasswords::enforceOnBackendUsers', false) && !App::runningInConsole()) {
             User::extend(function($model) {
                 $model->rules = array_merge($model->rules, ['password' => $model->rules['password'] . '|notpwned']);
             });

@@ -1,4 +1,4 @@
-<?php namespace LukeTowers\PwnedPasswords\ValidationRules;
+<?php namespace Winter\PwnedPasswords\ValidationRules;
 
 use Lang;
 use Cache;
@@ -60,7 +60,7 @@ class NotPwned implements Rule
      */
     public function message()
     {
-        return Lang::get('luketowers.pwnedpasswords::lang.validation.notpwned');
+        return Lang::get('winter.pwnedpasswords::lang.validation.notpwned');
     }
 
     /**
