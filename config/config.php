@@ -13,6 +13,7 @@
     | change their password.
     */
 
-    'enforceOnBackendUsers' => false,
+    'enforceOnBackendUsers' => true,
+    'enableRejectionLog' => true
 
 ];
