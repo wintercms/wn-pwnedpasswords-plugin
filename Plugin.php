@@ -76,11 +76,11 @@ class Plugin extends PluginBase
                     ) {
                         $validation = Validator::make(post(), ['password' => 'notpwned']);
                         if ($validation->fails()) {
-                            Event::fire('pwnedpasswords.backend.login_rejected', [
+                            Event::fire('pwnedpasswords.backend.login_rejected', [[
                                 'time' => now()->toDateTimeString(),
                                 'action' => $action,
                                 'user_input' => post('login') ?? post('email') ?? '(unknown)',
-                            ]);
+                            ]]);
                             // Force users to reset their password
                             if ($action === 'signin') {
                                 Event::listen('backend.user.login', function ($user) use ($controller) {

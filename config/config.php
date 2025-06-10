@@ -13,7 +13,18 @@
     | change their password.
     */
 
-    'enforceOnBackendUsers' => true,
-    'enableRejectionLog' => true
+    'enforceOnBackendUsers' => false,
+
+    /*
+    |--------------------------------------------------------------------------
+    | Enable logging for rejected backend logins
+    |--------------------------------------------------------------------------
+    |
+    | When enabled, any login attempt by a backend user with a compromised
+    | (pwned) password will trigger a log entry via the system logger. This
+    | is useful for auditing and monitoring potential security issues.
+    */
+
+    'enableRejectionLog' => false
 
 ];

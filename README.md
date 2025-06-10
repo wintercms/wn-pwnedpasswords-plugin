@@ -49,6 +49,12 @@ To enforce this rule on the Backend authentication system, create a file at `con
 ];
 ```
 
+
+If you would also like to log rejected login attempts, you can enable the enableRejectionLog option in the same file
+```php
+   'enableRejectionLog' => true,
+```
+
 ## Overriding the validation message
 
 To override the validation message, duplicate the plugin's `lang/en/lang.php` file to `project/lang/$locale/winter/pwnedpasswords/lang.php`.
