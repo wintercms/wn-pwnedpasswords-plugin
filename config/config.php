@@ -25,6 +25,6 @@
     | is useful for auditing and monitoring potential security issues.
     */
 
-    'enableRejectionLog' => false
+    'enableRejectionLog' => true,
 
 ];
