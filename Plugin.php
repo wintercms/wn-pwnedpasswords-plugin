@@ -51,8 +51,8 @@ class Plugin extends PluginBase
             }
         });
         if (Config::get('winter.pwnedpasswords::enableRejectionLog', false)) {
-            Event::listen('pwnedpasswords.backend.login_rejected', function ($data) {
-                Log::info('Pwned password event listener called', $data);
+            Event::listen('pwnedpasswords.backend.login_rejected', function ($user) {
+                Log::info('Pwned password event listener called', $user->toArray());
             });
         }
 
@@ -76,14 +76,12 @@ class Plugin extends PluginBase
                     ) {
                         $validation = Validator::make(post(), ['password' => 'notpwned']);
                         if ($validation->fails()) {
-                            Event::fire('pwnedpasswords.backend.login_rejected', [[
-                                'time' => now()->toDateTimeString(),
-                                'action' => $action,
-                                'user_input' => post('login') ?? post('email') ?? '(unknown)',
-                            ]]);
                             // Force users to reset their password
                             if ($action === 'signin') {
                                 Event::listen('backend.user.login', function ($user) use ($controller) {
+                                    // Trigger event for login rejected due to pwned password
+                                    Event::fire('pwnedpasswords.backend.login_rejected', [$user]);
+
                                     // Make sure the user is not authenticated
                                     BackendAuth::logout();
 
