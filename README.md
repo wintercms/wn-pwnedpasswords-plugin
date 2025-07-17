@@ -49,8 +49,8 @@ To enforce this rule on the Backend authentication system, create a file at `con
 ];
 ```
 
-
 If you would also like to log rejected login attempts, you can enable the enableRejectionLog option in the same file
+
 ```php
    'enableRejectionLog' => true,
 ```
