@@ -3,3 +3,4 @@
 1.1.0: 'Added config option to enforce the notpwned policy on all backend users by default and support Laravel 6'
 1.1.1: 'Support padding in the HIBP queries for extra security'
 1.1.2: 'Prevent applying the notpwned policy automatically while running in the CLI'
+2.0.0: 'Rebrand to Winter.PwnedPasswords'
