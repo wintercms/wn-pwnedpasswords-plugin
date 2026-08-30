@@ -2,6 +2,7 @@
 
 use App;
 use Lang;
+use Log;
 use Event;
 use Flash;
 use Config;
@@ -49,6 +50,11 @@ class Plugin extends PluginBase
                 return Lang::get('winter.pwnedpasswords::lang.validation.notpwned');
             }
         });
+        if (Config::get('winter.pwnedpasswords::enableRejectionLog', false)) {
+            Event::listen('pwnedpasswords.backend.login_rejected', function ($user) {
+                Log::info('Pwned password event listener called', $user->toArray());
+            });
+        }
 
         // Register the `notpwned:min` rule
         Validator::extend('notpwned', NotPwned::class);
@@ -73,6 +79,9 @@ class Plugin extends PluginBase
                             // Force users to reset their password
                             if ($action === 'signin') {
                                 Event::listen('backend.user.login', function ($user) use ($controller) {
+                                    // Trigger event for login rejected due to pwned password
+                                    Event::fire('pwnedpasswords.backend.login_rejected', [$user]);
+
                                     // Make sure the user is not authenticated
                                     BackendAuth::logout();
 
